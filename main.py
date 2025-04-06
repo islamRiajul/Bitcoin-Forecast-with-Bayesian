@@ -5,7 +5,7 @@
 # 
 # This section imports the necessary libraries and modules for data processing, model building, evaluation, and visualization.
 
-# In[3]:
+# In[ ]:
 
 
 import numpy as np
@@ -24,6 +24,9 @@ from plotly.subplots import make_subplots
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import warnings
+import plotly.io as pio
+from IPython.display import display
+pio.renderers.default = 'notebook_connected'
 warnings.filterwarnings('ignore')
 
 
