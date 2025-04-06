@@ -28,6 +28,7 @@ import plotly.io as pio
 from IPython.display import display
 pio.renderers.default = 'notebook_connected'
 pio.renderers.default = 'colab'
+pio.renderers.default = 'png'  # Set default to PNG for static export
 warnings.filterwarnings('ignore')
 
 
@@ -137,7 +138,7 @@ crypto_data.info()
 # **Purpose:**
 # - Detect and optionally remove or fill missing values using `isnull()`, `sum()`.
 
-# In[8]:
+# In[7]:
 
 
 crypto_data.isnull().sum()
@@ -177,7 +178,7 @@ crypto_data.isnull().sum()
 #   - This is a **forward-looking feature** showing whether trading activity increased or decreased the next day.  
 #   - It can be a proxy for predicting future market interest.
 
-# In[9]:
+# In[8]:
 
 
 # generating random sequences of data
@@ -199,7 +200,7 @@ crypto_data
 # **Information of Dataset:**
 # - Show data types, non-null counts, and memory usage with `info()`.
 
-# In[10]:
+# In[9]:
 
 
 crypto_data.info()
@@ -229,7 +230,7 @@ crypto_data.info()
 #     - **H** = High change
 #   - `daily change lmh`: Categorizes `Daily change` similarly into L, M, and H.
 
-# In[11]:
+# In[10]:
 
 
 # Handling Missing Values
@@ -246,7 +247,7 @@ crypto_data
 # Machine learning models typically require input features to be numeric. In this step, the categorical labels (`L`, `M`, `H`) created earlier using quantile binning are converted into integer representations using **Label Encoding**.
 # 
 
-# In[12]:
+# In[11]:
 
 
 from sklearn.preprocessing import LabelEncoder
@@ -278,7 +279,7 @@ crypto_data['daily change lmh'] = label_encoder.fit_transform(crypto_data['daily
 # - `train_test_data`  
 #   - Contains the subset of `crypto_data` within the specified date range, ready for training and testing.
 
-# In[13]:
+# In[12]:
 
 
 start_date=dt.datetime(2024,1,1)
@@ -294,7 +295,7 @@ train_test_data
 # **Outcome:**
 # - Helps understand distributions, averages, and variation in data.
 
-# In[14]:
+# In[13]:
 
 
 train_test_data.describe()
@@ -319,7 +320,7 @@ train_test_data.describe()
 #   - Names each line using the column name.  
 #   - Disables connecting gaps in the data.
 
-# In[15]:
+# In[14]:
 
 
 fig = make_subplots(rows=1, cols=1,x_title='Date',
@@ -339,7 +340,7 @@ fig.show()
 #   - Calculates the correlation matrix for the `train_test_data` DataFrame.  
 #   - Uses the **Pearson** correlation method (other options: Spearman, Kendall).
 
-# In[16]:
+# In[15]:
 
 
 correlations = train_test_data.corr(method='pearson') #spearman,pearson,kendall
@@ -359,7 +360,7 @@ print(correlations["Close"].sort_values(ascending=False))
 #   - Divides by the range of each column (`kl.max() - kl.min()`).  
 #   - Results in values scaled between 0 and 1, stored in `klminmax`.
 
-# In[17]:
+# In[16]:
 
 
 kl=train_test_data
@@ -388,7 +389,7 @@ klminmax=(kl-kl.min())/(kl.max()-kl.min())
 #   - Names each line using the column name.  
 #   - Disables connecting gaps in the data.
 
-# In[18]:
+# In[17]:
 
 
 fig = make_subplots(rows=1, cols=1,x_title='Date',
@@ -402,7 +403,7 @@ fig.show()
 
 # ## 📈 Visualization: Plotting Bitcoin Close Price Over Time
 
-# In[19]:
+# In[18]:
 
 
 fig = px.line(train_test_data, x=train_test_data.index, y=train_test_data.Close,labels={'date':'Date','close':'Close Stock'})
@@ -457,7 +458,7 @@ fig.show()
 #     - `MCMC`: Provides Markov Chain Monte Carlo methods for sampling from posterior distributions.  
 #     - `NUTS`: Implements the No-U-Turn Sampler, an efficient variant of Hamiltonian Monte Carlo for Bayesian inference.
 
-# In[20]:
+# In[19]:
 
 
 import numpy as np
@@ -476,7 +477,7 @@ from numpyro.infer import MCMC, NUTS
 # **Outcome:**
 # - Contributes to overall data pipeline or analysis.
 
-# In[21]:
+# In[20]:
 
 
 close_data=train_test_data.copy()
@@ -515,7 +516,7 @@ close_data=train_test_data.copy()
 # 
 # - This line drops rows with missing values to avoid errors during model training.
 
-# In[22]:
+# In[21]:
 
 
 # Feature Engineering
@@ -525,7 +526,7 @@ for lag in range(1, 4):
 close_data.dropna(inplace=True)
 
 
-# In[23]:
+# In[22]:
 
 
 close_data['Log_Close']
@@ -535,7 +536,7 @@ close_data['Log_Close']
 # 
 # This section analyzes the **correlation structure** of the features in the `close_data` DataFrame to identify variables that are strongly associated with the `Log_Close` price (our target variable).
 
-# In[24]:
+# In[23]:
 
 
 # Assuming `train_test_data` is your DataFrame
@@ -571,7 +572,7 @@ print(close_corr)
 # This section focuses on splitting the time series data into **training** and **testing** sets based on a specific date. This approach ensures that future data (testing) is never used to predict the past (training), which is essential in time series forecasting.
 # 
 
-# In[25]:
+# In[24]:
 
 
 end_train=dt.datetime(2025,1,15)
@@ -579,7 +580,7 @@ train_data=close_data.loc[(close_data.index>=start_date ) & (close_data.index<=e
 test_data=close_data.loc[(close_data.index>end_train )]
 
 
-# In[26]:
+# In[25]:
 
 
 test_data
@@ -597,7 +598,7 @@ test_data
 # - Applies z-score normalization using StandardScaler.
 # - Ensures that all features have a mean of 0 and standard deviation of 1, which helps many ML algorithms converge faster and perform better.
 
-# In[27]:
+# In[26]:
 
 
 features = ['High', 'Low', 'Open', 'SMA_7', 'Volume', 'SMA_30','Close_Lag_1', 'Close_Lag_2', 'Close_Lag_3']
@@ -656,7 +657,7 @@ scaled_test_data = scaler.transform(test_external)
 # 
 # - Converts the scaled test feature matrix to a **JAX array**, ready for prediction or forecasting tasks using posterior samples.
 
-# In[28]:
+# In[27]:
 
 
 # Define the Bayesian State-Space Model
@@ -702,7 +703,7 @@ scaled_test_jax = jnp.array(scaled_test_data)
 # 
 # This section generates **posterior predictions** using the trained Bayesian model and visualizes both the **training** and **testing forecasts** with **95% credible intervals**. The model outputs predictions in the **log-transformed space** (i.e., `Log_Close`).
 
-# In[29]:
+# In[33]:
 
 
 # Get the number of sampled latent states. This is CRUCIAL.
@@ -738,15 +739,24 @@ fig.add_trace(go.Scatter(x=train_timestamps, y=train_label, mode='lines', name='
 fig.add_trace(go.Scatter(x=train_timestamps, y=train_predictions, mode='lines', name='Training Prediction', line=dict(color='green')))
 fig.add_trace(go.Scatter(x=np.concatenate([train_timestamps, train_timestamps[::-1]]), y=np.concatenate([train_upper, train_lower[::-1]]), fill='toself', fillcolor='rgba(0,100,0,0.2)', line=dict(color='rgba(0,100,0,0)'), name='Training 95% CI'))
 
-# Test data
-fig.add_trace(go.Scatter(x=test_timestamps, y=test_label, mode='lines', name='Actual Test Values', line=dict(color='red')))
-
-# Test predictions (Keep in log form, no exponentiation)
-fig.add_trace(go.Scatter(x=test_timestamps, y=test_predictions, mode='lines', name='Test Prediction', line=dict(color='orange')))
-fig.add_trace(go.Scatter(x=np.concatenate([test_timestamps, test_timestamps[::-1]]), y=np.concatenate([test_upper, test_lower[::-1]]), fill='toself', fillcolor='rgba(200,50,0,0.2)', line=dict(color='rgba(200,50,0,0)'), name='Test 95% CI'))
 
 fig.update_layout(title="State-Space Training and Test Predictions vs. Actual Values", xaxis_title="Date", yaxis_title="Log-Transformed Value", template="plotly_white")
 fig.show()
+
+
+# In[36]:
+
+
+fig2 = go.Figure()
+# Test data
+fig2.add_trace(go.Scatter(x=test_timestamps, y=test_label, mode='lines', name='Actual Test Values', line=dict(color='red')))
+
+# Test predictions (Keep in log form, no exponentiation)
+fig2.add_trace(go.Scatter(x=test_timestamps, y=test_predictions, mode='lines', name='Test Prediction', line=dict(color='orange')))
+fig2.add_trace(go.Scatter(x=np.concatenate([test_timestamps, test_timestamps[::-1]]), y=np.concatenate([test_upper, test_lower[::-1]]), fill='toself', fillcolor='rgba(200,50,0,0.2)', line=dict(color='rgba(200,50,0,0)'), name='Test 95% CI'))
+
+fig2.update_layout(title="State-Space Training and Test Predictions vs. Actual Values", xaxis_title="Date", yaxis_title="Log-Transformed Value", template="plotly_white")
+fig2.show()
 
 
 # ## 📋 Posterior Summary Statistics: Coefficients & Uncertainty
@@ -759,7 +769,7 @@ fig.show()
 # 
 # The results are displayed in tabular format with **mean**, **median**, and **95% credible intervals**.
 
-# In[30]:
+# In[29]:
 
 
 # Coefficient Statistics in Table Form
@@ -812,7 +822,7 @@ print(table_noise_std)
 # 
 # This section visualizes the **sampling trajectories** of the `beta` coefficients from the posterior distribution using a **trace plot**. This diagnostic helps assess the **convergence** of the Markov Chain Monte Carlo (MCMC) sampler.
 
-# In[31]:
+# In[30]:
 
 
 # Extract beta samples for trace plot
@@ -902,7 +912,7 @@ fig.show()
 # > ✅ These diagnostic plots are key for understanding the **model convergence** and **parameter distributions**, helping us ensure reliable inference.
 # 
 
-# In[32]:
+# In[31]:
 
 
 from scipy.stats import gaussian_kde
@@ -969,7 +979,7 @@ plot_trace_and_density_plotly(noise_std_samples, 'Noise Std')
 # This section calculates and displays the **Mean Squared Error (MSE)** and **Mean Absolute Error (MAE)** for both the **training** and **test** sets. These metrics are used to assess the performance of the model in predicting the target variable.
 # 
 
-# In[33]:
+# In[32]:
 
 
 # Metrics
