@@ -126,7 +126,7 @@ $$
 
  #### Autoregressive Term :  
 $$ 0.8 \cdot x_{t-1} $$  
-  A fixed persistence coefficient \( 0.8 \) is applied to the previous latent state, capturing the inertia of the system over time.
+- A fixed persistence coefficient \( 0.8 \) is applied to the previous latent state, capturing the inertia of the system over time.
 
  #### External Features:  
 $$ \beta^{\top} X_{t-1} $$  
@@ -135,11 +135,11 @@ $$ \beta^{\top} X_{t-1} $$
 
   #### Seasonality:  
 $$ s_{t \mod 4} $$  
-  The seasonal effect is modeled with a quarterly periodicity (i.e., a 4-step cycle), capturing repeating patterns within each year.
+- The seasonal effect is modeled with a quarterly periodicity (i.e., a 4-step cycle), capturing repeating patterns within each year.
 
  #### Process Noise:  
 $$ \epsilon_t \sim \mathcal{N}(0, \sigma_p) $$  
-Gaussian noise, added to the model, with standard deviation \( $\sigma_p$ \) representing random disturbances in the system.
+- Gaussian noise, added to the model, with standard deviation \( $\sigma_p$ \) representing random disturbances in the system.
 
 ---
 
