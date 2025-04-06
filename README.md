@@ -235,8 +235,8 @@ Where:
 
 | Dataset    | MSE       | MAE       |
 |------------|-----------|-----------|
-| Training   | 0.0000    | 0.0022    |
-| Test       | 0.0011    | 0.0303    |
+| Training   | 0.0000    | 0.0026    |
+| Test       | 0.0012    | 0.0305    |
 
 **Interpretation**:  
 The model demonstrates strong predictive accuracy on both training and test sets, with near-zero error values indicating close alignment between predictions and actual prices.
