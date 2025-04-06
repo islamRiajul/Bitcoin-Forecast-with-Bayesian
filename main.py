@@ -5,7 +5,7 @@
 # 
 # This section imports the necessary libraries and modules for data processing, model building, evaluation, and visualization.
 
-# In[ ]:
+# In[1]:
 
 
 import numpy as np
@@ -41,7 +41,7 @@ warnings.filterwarnings('ignore')
 # - **Data Source:** Yahoo Finance via the `yfinance` API
 # - **Time Range:** As defined in the code (e.g., from `start = "2023-01-01"` to `end = "2025-01-25"`)
 
-# In[4]:
+# In[2]:
 
 
 crypto_data=yf.download("BTC-USD", start="2023-01-01", end="2025-01-25")
@@ -64,7 +64,7 @@ crypto_data
 # - `crypto_data.set_index('Date', inplace=True)`  
 #   Sets the 'Date' column as the index of the DataFrame — useful for time-series analysis and plotting.
 
-# In[5]:
+# In[3]:
 
 
 #data.columns = ['_'.join(col) for col in data.columns]
@@ -79,7 +79,7 @@ columns_to_keep = ['Close', 'High', 'Low','Open','Volume']
 crypto_data = crypto_data[columns_to_keep]
 
 
-# In[6]:
+# In[4]:
 
 
 crypto_data
@@ -111,7 +111,7 @@ crypto_data
 # - `SMA_30`:  
 #   - The **30-day simple moving average** gives insight into the longer-term trend.
 
-# In[7]:
+# In[5]:
 
 
 crypto_data['Weekly_Return'] = crypto_data['Close'].pct_change(periods=7)
@@ -127,7 +127,7 @@ crypto_data.head()
 # **Information of Dataset:**
 # - Show data types, non-null counts, and memory usage with `info()`.
 
-# In[8]:
+# In[6]:
 
 
 crypto_data.info()
@@ -137,7 +137,7 @@ crypto_data.info()
 # **Purpose:**
 # - Detect and optionally remove or fill missing values using `isnull()`, `sum()`.
 
-# In[9]:
+# In[8]:
 
 
 crypto_data.isnull().sum()
@@ -177,7 +177,7 @@ crypto_data.isnull().sum()
 #   - This is a **forward-looking feature** showing whether trading activity increased or decreased the next day.  
 #   - It can be a proxy for predicting future market interest.
 
-# In[10]:
+# In[9]:
 
 
 # generating random sequences of data
@@ -199,7 +199,7 @@ crypto_data
 # **Information of Dataset:**
 # - Show data types, non-null counts, and memory usage with `info()`.
 
-# In[11]:
+# In[10]:
 
 
 crypto_data.info()
@@ -229,7 +229,7 @@ crypto_data.info()
 #     - **H** = High change
 #   - `daily change lmh`: Categorizes `Daily change` similarly into L, M, and H.
 
-# In[12]:
+# In[11]:
 
 
 # Handling Missing Values
@@ -246,7 +246,7 @@ crypto_data
 # Machine learning models typically require input features to be numeric. In this step, the categorical labels (`L`, `M`, `H`) created earlier using quantile binning are converted into integer representations using **Label Encoding**.
 # 
 
-# In[13]:
+# In[12]:
 
 
 from sklearn.preprocessing import LabelEncoder
@@ -278,7 +278,7 @@ crypto_data['daily change lmh'] = label_encoder.fit_transform(crypto_data['daily
 # - `train_test_data`  
 #   - Contains the subset of `crypto_data` within the specified date range, ready for training and testing.
 
-# In[14]:
+# In[13]:
 
 
 start_date=dt.datetime(2024,1,1)
@@ -294,7 +294,7 @@ train_test_data
 # **Outcome:**
 # - Helps understand distributions, averages, and variation in data.
 
-# In[15]:
+# In[14]:
 
 
 train_test_data.describe()
@@ -319,7 +319,7 @@ train_test_data.describe()
 #   - Names each line using the column name.  
 #   - Disables connecting gaps in the data.
 
-# In[16]:
+# In[15]:
 
 
 fig = make_subplots(rows=1, cols=1,x_title='Date',
@@ -339,7 +339,7 @@ fig.show()
 #   - Calculates the correlation matrix for the `train_test_data` DataFrame.  
 #   - Uses the **Pearson** correlation method (other options: Spearman, Kendall).
 
-# In[17]:
+# In[16]:
 
 
 correlations = train_test_data.corr(method='pearson') #spearman,pearson,kendall
@@ -359,7 +359,7 @@ print(correlations["Close"].sort_values(ascending=False))
 #   - Divides by the range of each column (`kl.max() - kl.min()`).  
 #   - Results in values scaled between 0 and 1, stored in `klminmax`.
 
-# In[18]:
+# In[17]:
 
 
 kl=train_test_data
@@ -388,7 +388,7 @@ klminmax=(kl-kl.min())/(kl.max()-kl.min())
 #   - Names each line using the column name.  
 #   - Disables connecting gaps in the data.
 
-# In[19]:
+# In[18]:
 
 
 fig = make_subplots(rows=1, cols=1,x_title='Date',
@@ -402,7 +402,7 @@ fig.show()
 
 # ## 📈 Visualization: Plotting Bitcoin Close Price Over Time
 
-# In[20]:
+# In[19]:
 
 
 fig = px.line(train_test_data, x=train_test_data.index, y=train_test_data.Close,labels={'date':'Date','close':'Close Stock'})
@@ -457,7 +457,7 @@ fig.show()
 #     - `MCMC`: Provides Markov Chain Monte Carlo methods for sampling from posterior distributions.  
 #     - `NUTS`: Implements the No-U-Turn Sampler, an efficient variant of Hamiltonian Monte Carlo for Bayesian inference.
 
-# In[22]:
+# In[20]:
 
 
 import numpy as np
@@ -476,7 +476,7 @@ from numpyro.infer import MCMC, NUTS
 # **Outcome:**
 # - Contributes to overall data pipeline or analysis.
 
-# In[23]:
+# In[21]:
 
 
 close_data=train_test_data.copy()
@@ -515,7 +515,7 @@ close_data=train_test_data.copy()
 # 
 # - This line drops rows with missing values to avoid errors during model training.
 
-# In[24]:
+# In[22]:
 
 
 # Feature Engineering
@@ -525,7 +525,7 @@ for lag in range(1, 4):
 close_data.dropna(inplace=True)
 
 
-# In[25]:
+# In[23]:
 
 
 close_data['Log_Close']
@@ -535,7 +535,7 @@ close_data['Log_Close']
 # 
 # This section analyzes the **correlation structure** of the features in the `close_data` DataFrame to identify variables that are strongly associated with the `Log_Close` price (our target variable).
 
-# In[26]:
+# In[24]:
 
 
 # Assuming `train_test_data` is your DataFrame
@@ -563,8 +563,6 @@ fig.update_layout(
 )
 
 fig.show()
-
-# Print sorted correlations with 'Close'
 print(close_corr)
 
 
@@ -573,7 +571,7 @@ print(close_corr)
 # This section focuses on splitting the time series data into **training** and **testing** sets based on a specific date. This approach ensures that future data (testing) is never used to predict the past (training), which is essential in time series forecasting.
 # 
 
-# In[27]:
+# In[25]:
 
 
 end_train=dt.datetime(2025,1,15)
@@ -581,7 +579,7 @@ train_data=close_data.loc[(close_data.index>=start_date ) & (close_data.index<=e
 test_data=close_data.loc[(close_data.index>end_train )]
 
 
-# In[28]:
+# In[26]:
 
 
 test_data
@@ -599,7 +597,7 @@ test_data
 # - Applies z-score normalization using StandardScaler.
 # - Ensures that all features have a mean of 0 and standard deviation of 1, which helps many ML algorithms converge faster and perform better.
 
-# In[29]:
+# In[27]:
 
 
 features = ['High', 'Low', 'Open', 'SMA_7', 'Volume', 'SMA_30','Close_Lag_1', 'Close_Lag_2', 'Close_Lag_3']
@@ -658,7 +656,7 @@ scaled_test_data = scaler.transform(test_external)
 # 
 # - Converts the scaled test feature matrix to a **JAX array**, ready for prediction or forecasting tasks using posterior samples.
 
-# In[30]:
+# In[28]:
 
 
 # Define the Bayesian State-Space Model
@@ -704,7 +702,7 @@ scaled_test_jax = jnp.array(scaled_test_data)
 # 
 # This section generates **posterior predictions** using the trained Bayesian model and visualizes both the **training** and **testing forecasts** with **95% credible intervals**. The model outputs predictions in the **log-transformed space** (i.e., `Log_Close`).
 
-# In[31]:
+# In[29]:
 
 
 # Get the number of sampled latent states. This is CRUCIAL.
@@ -761,7 +759,7 @@ fig.show()
 # 
 # The results are displayed in tabular format with **mean**, **median**, and **95% credible intervals**.
 
-# In[32]:
+# In[30]:
 
 
 # Coefficient Statistics in Table Form
@@ -814,7 +812,7 @@ print(table_noise_std)
 # 
 # This section visualizes the **sampling trajectories** of the `beta` coefficients from the posterior distribution using a **trace plot**. This diagnostic helps assess the **convergence** of the Markov Chain Monte Carlo (MCMC) sampler.
 
-# In[33]:
+# In[31]:
 
 
 # Extract beta samples for trace plot
@@ -904,7 +902,7 @@ fig.show()
 # > ✅ These diagnostic plots are key for understanding the **model convergence** and **parameter distributions**, helping us ensure reliable inference.
 # 
 
-# In[34]:
+# In[32]:
 
 
 from scipy.stats import gaussian_kde
@@ -971,7 +969,7 @@ plot_trace_and_density_plotly(noise_std_samples, 'Noise Std')
 # This section calculates and displays the **Mean Squared Error (MSE)** and **Mean Absolute Error (MAE)** for both the **training** and **test** sets. These metrics are used to assess the performance of the model in predicting the target variable.
 # 
 
-# In[35]:
+# In[33]:
 
 
 # Metrics
