@@ -1,0 +1,11 @@
+numpy
+pandas
+scikit-learn
+arviz
+matplotlib
+yfinance
+plotly
+chart-studio
+scipy
+numpyro
+jax
