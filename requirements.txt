@@ -9,3 +9,5 @@ chart-studio
 scipy
 numpyro
 jax
+chart_studio
+datetime
