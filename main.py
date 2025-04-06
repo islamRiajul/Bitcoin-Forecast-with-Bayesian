@@ -27,6 +27,7 @@ import warnings
 import plotly.io as pio
 from IPython.display import display
 pio.renderers.default = 'notebook_connected'
+pio.renderers.default = 'colab'
 warnings.filterwarnings('ignore')
 
 
