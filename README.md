@@ -124,22 +124,22 @@ $$
 
 ### 🔑 Model Components
 
-- **Autoregressive Term**:  
-  $$ 0.8 \cdot x_{t-1} $$  
+ #### Autoregressive Term :  
+$$ 0.8 \cdot x_{t-1} $$  
   A fixed persistence coefficient \( 0.8 \) is applied to the previous latent state, capturing the inertia of the system over time.
 
-- **External Features**:  
-  $$ \beta^{\top} X_{t-1} $$  
+ #### External Features:  
+$$ \beta^{\top} X_{t-1} $$  
   - \( $\beta$\): Coefficient vector (length = number of external features).  
   - \( $X_{t-1}$ \): Feature vector at time \( $t-1$ \) (e.g., scaled historical data).
 
-- **Seasonality**:  
-  $$ s_{t \mod 4} $$  
+  #### Seasonality:  
+$$ s_{t \mod 4} $$  
   The seasonal effect is modeled with a quarterly periodicity (i.e., a 4-step cycle), capturing repeating patterns within each year.
 
-- **Process Noise**:  
-  $$ \epsilon_t \sim \mathcal{N}(0, \sigma_p) $$  
-  Gaussian noise, added to the model, with standard deviation \( $\sigma_p$ \) representing random disturbances in the system.
+ #### Process Noise:  
+$$ \epsilon_t \sim \mathcal{N}(0, \sigma_p) $$  
+Gaussian noise, added to the model, with standard deviation \( $\sigma_p$ \) representing random disturbances in the system.
 
 ---
 
@@ -214,12 +214,12 @@ Predictions on the test set are generated using posterior samples:
 # Evaluation Metrics
 Performance is measured using:
 
-**Mean Squared Error (MSE)**  
+### Mean Squared Error (MSE) 
 $$
 \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
 $$
 
-**Mean Absolute Error (MAE)**  
+### Mean Absolute Error (MAE)
 $$
 \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
 $$
